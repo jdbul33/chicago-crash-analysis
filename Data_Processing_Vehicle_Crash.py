@@ -80,5 +80,40 @@ vals, counts = np.unique(crash_data['SEVERE_CRASH'], return_counts=True)
 print(vals, counts)
 
 
+#%%
+"""
+Create Dummies for Categorical Variables
+"""
+
+crash_data_w_all_dummies = pd.get_dummies(crash_data)
+
+crash_data_w_all_dummies.columns = crash_data_w_all_dummies.columns.str.strip().str.lower().str.replace(' ', '_').str.replace(',', '_').str.replace(")",'').str.replace("(",'').str.replace("-",'').str.replace('/', '_')
+
+new_column_name_list = []
+
+
+for i in range(len(crash_data_w_all_dummies.columns)):
+    name = crash_data_w_all_dummies.columns[i]
+    if len(name) >= 32:
+        name = name[0:31]
+    else:
+        pass
+    assert len(name) < 32
+    new_column_name_list.append(name)
+
+assert len(new_column_name_list) == len(crash_data_w_all_dummies.columns)
+    
+crash_data_SAS_ready = crash_data_w_all_dummies
+
+crash_data_SAS_ready.columns = new_column_name_list
+    
+    
+    
+#%%
+"""
+Write to CSV file for SAS import
+"""
+
+crash_data_SAS_ready.to_csv("Data/crash_data.csv")
 
     
