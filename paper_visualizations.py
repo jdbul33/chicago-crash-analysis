@@ -7,7 +7,7 @@ Created on Tue Feb 12 14:27:24 2019
 
 
 """
-
+test
 Run this after reading in data from the initial file.  This is 
 only visualization for paper
 
