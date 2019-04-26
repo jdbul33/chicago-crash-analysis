@@ -107,13 +107,163 @@ crash_data_SAS_ready = crash_data_w_all_dummies
 
 crash_data_SAS_ready.columns = new_column_name_list
     
-    
+crash_data_SAS_ready.columns
     
 #%%
 """
 Write to CSV file for SAS import
 """
 
-crash_data_SAS_ready.to_csv("Data/crash_data.csv")
+#crash_data_SAS_ready.to_csv("Data/crash_data.csv")
 
     
+#%%
+"""
+Condense dummies based on theory and SAS stepwise results
+"""
+
+#%%
+"""
+Start condensing variables
+
+Traffic control device and condition
+"""
+
+crash_data_reduced = crash_data
+
+
+print(traffic_control_device_values)
+print(device_condition_values)
+
+traffic_control_pres_func = []
+traffic_control_pres_nonfunc = []
+
+
+for i in range(len(crash_data_reduced)):
+    if crash_data_reduced.TRAFFIC_CONTROL_DEVICE[i] != 'NO CONTROLS' and crash_data_reduced.DEVICE_CONDITION[i] == 'FUNCTIONING PROPERLY':
+        traffic_control_pres_func.append(1)
+    else:
+        traffic_control_pres_func.append(0)
+
+for i in range(len(crash_data_reduced)):
+    if crash_data_reduced.TRAFFIC_CONTROL_DEVICE[i] != 'NO CONTROLS' and crash_data_reduced.DEVICE_CONDITION[i] != 'FUNCTIONING PROPERLY':
+        traffic_control_pres_nonfunc.append(1)
+    else:
+        traffic_control_pres_nonfunc.append(0)
+        
+crash_data_reduced['Traffic_Control_Present_Func'] = traffic_control_pres_func
+crash_data_reduced['Traffic_Control_Present_NonFunc'] = traffic_control_pres_nonfunc
+crash_data_reduced.drop(columns=['TRAFFIC_CONTROL_DEVICE', 'DEVICE_CONDITION'], inplace=True)
+
+#%%
+"""
+weather condition
+"""
+
+print(weather_condition_values)
+
+weather_condition_column = []
+
+for i in range(len(crash_data_reduced)):
+    if crash_data_reduced.WEATHER_CONDITION[i] == 'CLEAR':
+        weather_condition_column.append(0)
+    else:
+        weather_condition_column.append(1)
+        
+crash_data_reduced['Weather_Cond_Present'] = weather_condition_column
+crash_data_reduced.drop(columns=['WEATHER_CONDITION'], inplace=True)
+
+#%%
+"""
+Lighting
+"""
+
+print(lighting_condition_values)
+
+lighting_condition_column = []
+
+for i in range(len(crash_data_reduced)):
+    if crash_data_reduced.LIGHTING_CONDITION[i] == 'DAYLIGHT':
+        lighting_condition_column.append(0)
+    else:
+        lighting_condition_column.append(1)
+        
+crash_data_reduced['Non_Daylight'] = lighting_condition_column
+crash_data_reduced.drop(columns=['LIGHTING_CONDITION'], inplace=True)
+
+
+#%%
+"""
+Trafficway type
+"""
+
+print(alignment_values)
+
+alignment_column = []
+
+for i in range(len(crash_data_reduced)):
+    if crash_data_reduced.ALIGNMENT[i] == 'STRAIGHT AND LEVEL':
+        alignment_column.append(1)
+    else:
+        alignment_column.append(0)
+        
+crash_data_reduced['Straight_Road'] = alignment_column
+crash_data_reduced.drop(columns=['ALIGNMENT', 'TRAFFICWAY_TYPE'], inplace=True)
+
+#%%
+"""
+roadway_surface_condition
+"""
+
+print(roadway_surface_condition_values)
+
+roadway_surface_condition_column = []
+poor_conditions = ['WET', 'SNOW OR SLUSH' , 'ICE', 'SAND, MUD, DIRT']
+
+for i in range(len(crash_data_reduced)):
+    if crash_data_reduced.ROADWAY_SURFACE_COND[i] in poor_conditions:
+        roadway_surface_condition_column.append(1)
+    else:
+        roadway_surface_condition_column.append(0)
+        
+crash_data_reduced['Poor_Road_Cond'] = roadway_surface_condition_column
+crash_data_reduced.drop(columns=['ROADWAY_SURFACE_COND'], inplace=True)
+
+
+#%%
+"""
+roadway_surface_condition
+"""
+
+print(road_defect_values)
+
+road_defect_column = []
+
+for i in range(len(crash_data_reduced)):
+    if crash_data_reduced.ROAD_DEFECT[i] == 'NO DEFECTS':
+        road_defect_column.append(0)
+    else:
+        road_defect_column.append(1)
+        
+crash_data_reduced['Road_Defect_Pres'] = road_defect_column
+crash_data_reduced.drop(columns=['ROAD_DEFECT'], inplace=True)
+
+
+#%%
+"""
+Write to CSV file for SAS import
+"""
+
+#crash_data_reduced.to_csv("Data/crash_data_dummy_ready.csv")
+#sum(crash_data_reduced['Traffic_Control_Present_Func'])
+s#sum(crash_data_reduced['Traffic_Control_Present_NonFunc'])
+
+
+
+
+
+
+
+
+
+
